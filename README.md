@@ -1,2 +1,2 @@
-# Example
-An example greeter plugin
+# Twitch Emotes Plugin
+Enabled Twitch emotes, BTTV emotes and FFZ emotes.

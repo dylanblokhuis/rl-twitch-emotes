@@ -1,12 +1,11 @@
-package com.example;
+package com.blokys;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
-@ConfigGroup("example")
-public interface ExampleConfig extends Config
-{
+@ConfigGroup("twitch-emotes")
+public interface TwitchEmotesPluginConfig extends Config {
 	@ConfigItem(
 		keyName = "greeting",
 		name = "Welcome Greeting",
