@@ -6,7 +6,8 @@ import net.runelite.api.IndexedSprite;
 import java.util.HashMap;
 import java.util.List;
 
-public class Store {
+public class Store
+{
     private static List<Emote> emotes;
     private static HashMap<String, IndexedSprite> images = new HashMap<>();
     private static Integer defaultModIconsLength = -1;
@@ -26,19 +27,23 @@ public class Store {
         return images;
     }
 
-    public static void setImages(HashMap<String, IndexedSprite> images) {
+    public static void setImages(HashMap<String, IndexedSprite> images)
+    {
         Store.images = images;
     }
 
-    public static void addItemToImages(String key, IndexedSprite image) {
+    public static void addItemToImages(String key, IndexedSprite image)
+    {
         Store.images.put(key, image);
     }
 
-    public static void setDefaultModIconsLength(Integer defaultModIconsLength) {
+    public static void setDefaultModIconsLength(Integer defaultModIconsLength)
+    {
         Store.defaultModIconsLength = defaultModIconsLength;
     }
 
-    public static Integer getDefaultModIconsLength() {
+    public static Integer getDefaultModIconsLength()
+    {
         return defaultModIconsLength;
     }
 }

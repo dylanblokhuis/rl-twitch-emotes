@@ -12,8 +12,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fetcher implements Callback<List<Emote>> {
-    public Fetcher() {
+public class Fetcher implements Callback<List<Emote>>
+{
+    public Fetcher()
+    {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
@@ -31,8 +33,10 @@ public class Fetcher implements Callback<List<Emote>> {
     }
 
     @Override
-    public void onResponse(Call<List<Emote>> call, Response<List<Emote>> response) {
-        if (response.body() == null) {
+    public void onResponse(Call<List<Emote>> call, Response<List<Emote>> response)
+    {
+        if (response.body() == null)
+        {
             System.out.println("Couldn't fetch emotes because body is empty");
             return;
         }
@@ -43,7 +47,8 @@ public class Fetcher implements Callback<List<Emote>> {
     }
 
     @Override
-    public void onFailure(Call<List<Emote>> call, Throwable t) {
+    public void onFailure(Call<List<Emote>> call, Throwable t)
+    {
         System.out.println("Couldn't fetch emotes because request failed");
     }
 }

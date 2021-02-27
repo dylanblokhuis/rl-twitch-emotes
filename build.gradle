@@ -26,7 +26,7 @@ dependencies {
 	implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 }
 
-group = 'com.example'
+group = 'com.blokys'
 version = '1.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 

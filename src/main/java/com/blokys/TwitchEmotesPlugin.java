@@ -46,7 +46,7 @@ public class TwitchEmotesPlugin extends Plugin
 	}
 
 	@Override
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
 		log.info("Stopped Twitch emotes plugin");
 	}
@@ -54,11 +54,13 @@ public class TwitchEmotesPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage chatMessage)
 	{
-		if (client.getGameState() != GameState.LOGGED_IN) {
+		if (client.getGameState() != GameState.LOGGED_IN)
+		{
 			return;
 		}
 
-		switch (chatMessage.getType()) {
+		switch (chatMessage.getType())
+		{
 			case PUBLICCHAT:
 			case MODCHAT:
 			case FRIENDSCHAT:
@@ -72,7 +74,8 @@ public class TwitchEmotesPlugin extends Plugin
 
 		String updatedMessage = mutateChatMessage(chatMessage.getMessage());
 
-		if (updatedMessage == null) {
+		if (updatedMessage == null)
+		{
 			return;
 		}
 
@@ -93,11 +96,11 @@ public class TwitchEmotesPlugin extends Plugin
 	}
 
 
-	String mutateChatMessage(String message)
-	{
+	String mutateChatMessage(String message) {
 		String[] words = WHITESPACE_REGEXP.split(message);
 
-		for (int i = 0; i < words.length; i++) {
+		for (int i = 0; i < words.length; i++)
+		{
 			String word = Text.removeFormattingTags(words[i]);
 			if (!word.startsWith(":")) continue;
 			if (!word.endsWith(":")) continue;

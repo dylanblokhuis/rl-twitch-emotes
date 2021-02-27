@@ -12,13 +12,16 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-public class Emotes {
-    public static Integer findModIconKey(String needle, Client client) {
+public class Emotes
+{
+    public static Integer findModIconKey(String needle, Client client)
+    {
         List<Emote> emotes = Store.getEmotes();
 
         if (emotes == null) return null;
 
-        for (int i = 0; i < emotes.size(); i++) {
+        for (int i = 0; i < emotes.size(); i++)
+        {
             Emote emote = emotes.get(i);
 
             boolean doesEmoteMatch = needle.toLowerCase().contains(
@@ -29,10 +32,14 @@ public class Emotes {
 
             IndexedSprite sprite;
 
-            if (Store.getImages().get(emote.getCode()) != null) {
+            if (Store.getImages().get(emote.getCode()) != null)
+            {
                 sprite = Store.getImages().get(emote.getCode());
-            } else {
-                try {
+            }
+            else
+            {
+                try
+                {
                     URL url;
 
                     switch (emote.getPlatform()) {
@@ -40,7 +47,8 @@ public class Emotes {
                             url = new URL("https://cdn.betterttv.net/emote/" + emote.getId() + "/1x.png");
                             break;
                         case "ffz":
-                            url = new URL("https://cdn.frankerfacez.com/emote/" + emote.getId() + "/1");                            break;
+                            url = new URL("https://cdn.frankerfacez.com/emote/" + emote.getId() + "/1");
+                            break;
                         case "twitch":
                             url = new URL("https://static-cdn.jtvnw.net/emoticons/v1/" + emote.getId() + "/1.0");
                             break;
@@ -56,7 +64,9 @@ public class Emotes {
                     sprite.setOffsetY(2);
 
                     Store.addItemToImages(emote.getCode(), sprite);
-                } catch (IOException e) {
+                }
+                catch (IOException e)
+                {
                     System.out.println(e.getMessage());
                     continue;
                 }
