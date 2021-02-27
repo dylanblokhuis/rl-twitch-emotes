@@ -1,9 +1,9 @@
-package com.blokys.bttv;
+package com.blokys.fetch;
 
 public class Emote {
     String id;
     String code;
-    String imageType;
+    String platform;
 
     public String getId() {
         return id;
@@ -21,11 +21,11 @@ public class Emote {
         this.code = code;
     }
 
-    public String getImageType() {
-        return imageType;
+    public String getPlatform() {
+        return platform;
     }
 
-    public void setImageType(String imageType) {
-        this.imageType = imageType;
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }

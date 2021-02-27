@@ -1,33 +1,20 @@
 package com.blokys;
 
-import com.blokys.bttv.BetterTwitchTV;
-import com.blokys.bttv.Emote;
-import com.google.inject.Provides;
-
-import javax.imageio.ImageIO;
-import javax.inject.Inject;
-
+import com.blokys.fetch.Fetcher;
 import joptsimple.internal.Strings;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
+import net.runelite.api.Client;
+import net.runelite.api.GameState;
+import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.OverheadTextChanged;
-import net.runelite.client.chat.ChatMessageManager;
-import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
-import net.runelite.client.util.ImageUtil;
+import net.runelite.client.util.Text;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import javax.inject.Inject;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -41,18 +28,12 @@ public class TwitchEmotesPlugin extends Plugin
 	@Inject
 	private Client client;
 
-	@Inject
-	private TwitchEmotesPluginConfig config;
-
-	@Inject
-	private ChatMessageManager chatMessageManager;
-
 	@Override
-	protected void startUp() throws Exception
+	protected void startUp()
 	{
 		log.info("Started Twitch Emotes plugin");
 
-		new BetterTwitchTV();
+		new Fetcher();
 	}
 
 	@Subscribe
@@ -73,8 +54,29 @@ public class TwitchEmotesPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage chatMessage)
 	{
-		chatMessage.getMessageNode().setValue(mutateChatMessage(chatMessage.getMessage()));
-		chatMessageManager.update(chatMessage.getMessageNode());
+		if (client.getGameState() != GameState.LOGGED_IN) {
+			return;
+		}
+
+		switch (chatMessage.getType()) {
+			case PUBLICCHAT:
+			case MODCHAT:
+			case FRIENDSCHAT:
+			case PRIVATECHAT:
+			case PRIVATECHATOUT:
+			case MODPRIVATECHAT:
+				break;
+			default:
+				return;
+		}
+
+		String updatedMessage = mutateChatMessage(chatMessage.getMessage());
+
+		if (updatedMessage == null) {
+			return;
+		}
+
+		chatMessage.getMessageNode().setValue(updatedMessage);
 	}
 
 	@Subscribe
@@ -96,21 +98,16 @@ public class TwitchEmotesPlugin extends Plugin
 		String[] words = WHITESPACE_REGEXP.split(message);
 
 		for (int i = 0; i < words.length; i++) {
-			if (!words[i].startsWith(":")) continue;
-			if (!words[i].endsWith(":")) continue;
+			String word = Text.removeFormattingTags(words[i]);
+			if (!word.startsWith(":")) continue;
+			if (!word.endsWith(":")) continue;
 
-			Integer modIconKey = Emotes.findModIconKey(words[i], client);
+			Integer modIconKey = Emotes.findModIconKey(word, client);
 			if (modIconKey == null) continue;
 
-			words[i] = words[i].replace(words[i], "<img=" + modIconKey + ">");
+			words[i] = word.replace(word, "<img=" + modIconKey + ">");
 		}
 
 		return Strings.join(words, " ");
-	}
-
-	@Provides
-	TwitchEmotesPluginConfig provideConfig(ConfigManager configManager)
-	{
-		return configManager.getConfig(TwitchEmotesPluginConfig.class);
 	}
 }

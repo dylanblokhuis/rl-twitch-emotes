@@ -1,6 +1,6 @@
 package com.blokys;
 
-import com.blokys.bttv.Emote;
+import com.blokys.fetch.Emote;
 import net.runelite.api.Client;
 import net.runelite.api.IndexedSprite;
 import net.runelite.client.util.ImageUtil;
@@ -14,7 +14,9 @@ import java.util.List;
 
 public class Emotes {
     public static Integer findModIconKey(String needle, Client client) {
-        List<Emote> emotes = Store.getBttvEmotes();
+        List<Emote> emotes = Store.getEmotes();
+
+        if (emotes == null) return null;
 
         for (int i = 0; i < emotes.size(); i++) {
             Emote emote = emotes.get(i);
@@ -31,9 +33,28 @@ public class Emotes {
                 sprite = Store.getImages().get(emote.getCode());
             } else {
                 try {
-                    URL url = new URL("https://cdn.betterttv.net/emote/" + emote.getId() + "/1x." + emote.getImageType());
+                    URL url;
+
+                    switch (emote.getPlatform()) {
+                        case "bttv":
+                            url = new URL("https://cdn.betterttv.net/emote/" + emote.getId() + "/1x.png");
+                            break;
+                        case "ffz":
+                            url = new URL("https://cdn.frankerfacez.com/emote/" + emote.getId() + "/1");                            break;
+                        case "twitch":
+                            url = new URL("https://static-cdn.jtvnw.net/emoticons/v1/" + emote.getId() + "/1.0");
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    // download image and convert to ARBG
                     BufferedImage img = ImageUtil.toARGB(ImageIO.read(url));
+                    // resize image so it's suitable to be a sprite
                     sprite = ImageUtil.getImageIndexedSprite(ImageUtil.resizeImage(img, 14, 14), client);
+                    // emotes are off center in the client, so adding a 2px vertical offset fixes that.
+                    sprite.setOffsetY(2);
+
                     Store.addItemToImages(emote.getCode(), sprite);
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
