@@ -41,9 +41,7 @@ public class Fetcher implements Callback<List<Emote>>
             return;
         }
 
-        Store.setEmotes(
-                new ArrayList<>(response.body())
-        );
+        Store.setEmotes(new ArrayList<>(response.body()));
     }
 
     @Override

@@ -9,6 +9,7 @@ import net.runelite.api.Player;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.OverheadTextChanged;
+import net.runelite.client.chat.ChatMessageManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -19,7 +20,9 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Twitch Emotes"
+	name = "Twitch Emotes",
+	description = "Enables Twitch emotes, BetterTwitchTV and FrankerFaceZ emotes.",
+	tags = {"chat", "twitch"}
 )
 public class TwitchEmotesPlugin extends Plugin
 {
@@ -27,6 +30,9 @@ public class TwitchEmotesPlugin extends Plugin
 
 	@Inject
 	private Client client;
+
+	@Inject
+	private ChatMessageManager chatMessageManager;
 
 	@Override
 	protected void startUp()
@@ -80,6 +86,7 @@ public class TwitchEmotesPlugin extends Plugin
 		}
 
 		chatMessage.getMessageNode().setValue(updatedMessage);
+		chatMessageManager.update(chatMessage.getMessageNode());
 	}
 
 	@Subscribe
@@ -102,6 +109,7 @@ public class TwitchEmotesPlugin extends Plugin
 		for (int i = 0; i < words.length; i++)
 		{
 			String word = Text.removeFormattingTags(words[i]);
+
 			if (!word.startsWith(":")) continue;
 			if (!word.endsWith(":")) continue;
 
